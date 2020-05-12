@@ -47,6 +47,7 @@ UIC_SRC = uic_codes.h uic_codes.c
 DATABITS_SRC = \
 	databits.h \
 	databits_ascii.c \
+	databits_asciihex.c \
 	databits_binary.c \
 	databits_callerid.c \
 	databits_baudot.c $(BAUDOT_SRC) \

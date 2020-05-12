@@ -610,6 +610,7 @@ main( int argc, char*argv[] )
 			{ "auto-carrier",	0, 0, 'a' },
 			{ "inverted",	0, 0, 'i' },
 			{ "ascii",		0, 0, '8' },
+			{ "asciihex",		0, 0, 'x' },
 			{ "",		0, 0, '7' },
 			{ "baudot",		0, 0, '5' },
 			{ "msb-first",	0, 0, MINIMODEM_OPT_MSBFIRST },
@@ -638,7 +639,7 @@ main( int argc, char*argv[] )
 			{ "tx-carrier",      0, 0, MINIMODEM_OPT_TXCARRIER },
 			{ 0 }
 		};
-		c = getopt_long(argc, argv, "Vtrc:l:ai875f:b:v:M:S:T:qA::R:",
+		c = getopt_long(argc, argv, "Vtrc:l:ai8x75f:b:v:M:S:T:qA::R:",
 				long_options, &option_index);
 		if ( c == -1 )
 			break;
@@ -673,6 +674,11 @@ main( int argc, char*argv[] )
 			break;
 		case '8':
 			bfsk_n_data_bits = 8;
+			break;
+		case 'x':
+			bfsk_n_data_bits = 8;
+			bfsk_databits_decode = databits_decode_asciihex;
+			bfsk_databits_encode = databits_encode_asciihex;
 			break;
 		case '7':
 			bfsk_n_data_bits = 7;

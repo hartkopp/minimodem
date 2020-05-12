@@ -67,6 +67,15 @@ databits_decode_ascii8( char *dataout_p, unsigned int dataout_size,
 			int parity );
 
 
+int
+databits_encode_asciihex( unsigned int *databits_outp, char char_out );
+
+unsigned int
+databits_decode_asciihex( char *dataout_p, unsigned int dataout_size,
+			  unsigned long long bits, unsigned int n_databits,
+			  int parity );
+
+
 #include "baudot.h"
 #define databits_encode_baudot baudot_encode // from baudot.h
 //int
