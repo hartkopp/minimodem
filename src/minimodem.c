@@ -43,6 +43,9 @@
 #include "fsk.h"
 #include "databits.h"
 
+#define PARITY_ODD 1
+#define PARITY_EVEN 2
+
 char *program_name = "";
 
 int		tx_transmitting = 0;
@@ -87,6 +90,7 @@ static void fsk_transmit_frame(
 	float bfsk_nstartbits,
 	float bfsk_nstopbits,
 	int invert_start_stop,
+	int bfsk_parity,
 	int bfsk_msb_first
 	)
 {
@@ -120,6 +124,7 @@ static void fsk_transmit_stdin(
 	float bfsk_nstartbits,
 	float bfsk_nstopbits,
 	int invert_start_stop,
+	int bfsk_parity,
 	int bfsk_msb_first,
 	unsigned int bfsk_do_tx_sync_bytes,
 	unsigned int bfsk_sync_byte,
@@ -217,14 +222,16 @@ static void fsk_transmit_stdin(
 				for ( j=0; j<bfsk_do_tx_sync_bytes; j++ )
 					fsk_transmit_frame(sa_out, bfsk_sync_byte, n_data_bits,
 							   bit_nsamples, bfsk_mark_f, bfsk_space_f,
-							   bfsk_nstartbits, bfsk_nstopbits, invert_start_stop, 0);
+							   bfsk_nstartbits, bfsk_nstopbits, invert_start_stop,
+							   bfsk_parity, 0);
 			}
 
 			/* emit data bits */
 			for ( j=0; j<nwords; j++ )
 				fsk_transmit_frame(sa_out, bits[j], n_data_bits,
 						   bit_nsamples, bfsk_mark_f, bfsk_space_f,
-						   bfsk_nstartbits, bfsk_nstopbits, invert_start_stop, bfsk_msb_first);
+						   bfsk_nstartbits, bfsk_nstopbits, invert_start_stop,
+						   bfsk_parity, bfsk_msb_first);
 		}
 		else
 		{
@@ -407,6 +414,7 @@ usage()
 		"		    -M, --mark {mark_freq}\n"
 		"		    -S, --space {space_freq}\n"
 		"		    --startbits {n}\n"
+		"		    --parity {n} %d=ODD %d=EVEN\n"
 		"		    --stopbits {n.n}\n"
 		"		    --invert-start-stop\n"
 		"		    --sync-byte {0xXX}\n"
@@ -431,7 +439,8 @@ usage()
 		"		     tdd       TTY/TDD    45.45 bps --baudot --stopbits=2.0\n"
 		"		    same       NOAA SAME 520.83 bps --sync-byte=0xAB ...\n"
 		"		callerid       Bell202 CID 1200 bps\n"
-		"     uic{-train,-ground}       UIC-751-3 Train/Ground 600 bps\n"
+		"     uic{-train,-ground}       UIC-751-3 Train/Ground 600 bps\n",
+		PARITY_ODD, PARITY_EVEN
 		);
 	exit(1);
 }
@@ -500,6 +509,7 @@ main( int argc, char*argv[] )
 	unsigned int bfsk_do_tx_sync_bytes = 0;
 	unsigned long long bfsk_sync_byte = -1;
 	unsigned int bfsk_n_data_bits = 0;
+	int bfsk_parity = 0;
 	int bfsk_msb_first = 0;
 	char *expect_data_string = NULL;
 	char *expect_sync_string = NULL;
@@ -570,6 +580,7 @@ main( int argc, char*argv[] )
 		MINIMODEM_OPT_UNUSED=256,	// placeholder
 		MINIMODEM_OPT_MSBFIRST,
 		MINIMODEM_OPT_STARTBITS,
+		MINIMODEM_OPT_PARITY,
 		MINIMODEM_OPT_STOPBITS,
 		MINIMODEM_OPT_INVERT_START_STOP,
 		MINIMODEM_OPT_SYNC_BYTE,
@@ -608,6 +619,7 @@ main( int argc, char*argv[] )
 			{ "mark",		1, 0, 'M' },
 			{ "space",		1, 0, 'S' },
 			{ "startbits",	1, 0, MINIMODEM_OPT_STARTBITS },
+			{ "parity",		1, 0, MINIMODEM_OPT_PARITY },
 			{ "stopbits",	1, 0, MINIMODEM_OPT_STOPBITS },
 			{ "invert-start-stop", 0, 0, MINIMODEM_OPT_INVERT_START_STOP },
 			{ "sync-byte",	1, 0, MINIMODEM_OPT_SYNC_BYTE },
@@ -697,6 +709,10 @@ main( int argc, char*argv[] )
 			// Note: bfsk_nstartbits is limited by arrays
 		        //   expect_bits_string[32] and fsk.c:bit_something[32]
 			assert( bfsk_nstartbits >= 0 && bfsk_nstartbits <= 20 );
+			break;
+		case MINIMODEM_OPT_PARITY:
+			bfsk_parity = atoi(optarg);
+			assert( bfsk_parity != PARITY_ODD && bfsk_parity != PARITY_EVEN );
 			break;
 		case MINIMODEM_OPT_STOPBITS:
 			bfsk_nstopbits = atof(optarg);
@@ -970,6 +986,7 @@ main( int argc, char*argv[] )
 				   bfsk_nstartbits,
 				   bfsk_nstopbits,
 				   invert_start_stop,
+				   bfsk_parity,
 				   bfsk_msb_first,
 				   bfsk_do_tx_sync_bytes,
 				   bfsk_sync_byte,
@@ -1028,6 +1045,8 @@ main( int argc, char*argv[] )
 	nbits += 1;			// prev stop bit (last whole stop bit)
 	nbits += bfsk_nstartbits;	// start bits
 	nbits += bfsk_n_data_bits;
+	if (bfsk_parity)		// we have one parity bit
+		nbits += 1;
 	nbits += 1;			// stop bit (first whole stop bit)
 
 	// FIXME EXPLAIN +1 goes with extra bit when scanning
@@ -1320,7 +1339,7 @@ main( int argc, char*argv[] )
 				fprintf(stderr, "###\n");
 
 			carrier = 1;
-			bfsk_databits_decode(0, 0, 0, 0); // reset the frame processor
+			bfsk_databits_decode(0, 0, 0, 0, 0); // reset the frame processor
 
 			do_refine_frame = 1;
 			debug_log(" ... do_refine_frame rescan (acquired carrier)\n");
@@ -1394,11 +1413,11 @@ main( int argc, char*argv[] )
 		 */
 
 		// chop off framing bits
-		bits = bit_window(bits, bfsk_nstartbits, bfsk_n_data_bits);
+		bits = bit_window(bits, bfsk_nstartbits, bfsk_n_data_bits, bfsk_parity);
 		if (bfsk_msb_first) {
 			bits = bit_reverse(bits, bfsk_n_data_bits);
 		}
-		debug_log("Input: %08x%08x - Databits: %u - Shift: %i\n", (unsigned int)(bits >> 32), (unsigned int)bits, bfsk_n_data_bits, bfsk_nstartbits);
+		debug_log("Input: %08x%08x - Databits: %u - Parity: %i - Shift: %i\n", (unsigned int)(bits >> 32), (unsigned int)bits, bfsk_n_data_bits, bfsk_parity, bfsk_nstartbits);
 
 		unsigned int dataout_size = 4096;
 		char dataoutbuf[4096];
@@ -1412,7 +1431,8 @@ main( int argc, char*argv[] )
 
 		dataout_nbytes += bfsk_databits_decode(dataoutbuf + dataout_nbytes,
 						       dataout_size - dataout_nbytes,
-						       bits, (int)bfsk_n_data_bits);
+						       bits, (int)bfsk_n_data_bits,
+						       bfsk_parity);
 
 		if ( dataout_nbytes == 0 )
 			continue;

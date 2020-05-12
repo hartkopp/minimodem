@@ -36,9 +36,15 @@ bit_reverse(unsigned long long value,
 static inline unsigned long long
 bit_window(unsigned long long value,
 	   unsigned int offset,
-	   unsigned int bits)
+	   unsigned int bits,
+	   int parity)
 {
-	unsigned long long mask = (1ULL << bits) - 1;
+	unsigned long long mask;
+
+	if (parity)
+		bits++;
+
+	mask = (1ULL << bits) - 1;
 	value = (value >> offset) & mask;
 	return value;
 }
@@ -48,7 +54,8 @@ typedef int (databits_encoder)(
 
 typedef unsigned int (databits_decoder)(
 	char *dataout_p, unsigned int dataout_size,
-	unsigned long long bits, unsigned int n_databits );
+	unsigned long long bits, unsigned int n_databits,
+	int parity );
 
 
 int
@@ -56,7 +63,8 @@ databits_encode_ascii8( unsigned int *databits_outp, char char_out );
 
 unsigned int
 databits_decode_ascii8( char *dataout_p, unsigned int dataout_size,
-			unsigned long long bits, unsigned int n_databits );
+			unsigned long long bits, unsigned int n_databits,
+			int parity );
 
 
 #include "baudot.h"
@@ -66,25 +74,29 @@ databits_decode_ascii8( char *dataout_p, unsigned int dataout_size,
 
 unsigned int
 databits_decode_baudot( char *dataout_p, unsigned int dataout_size,
-			unsigned long long bits, unsigned int n_databits );
-
+			unsigned long long bits, unsigned int n_databits,
+			int parity );
 
 int
 databits_encode_binary( unsigned int *databits_outp, char char_out );
 
 unsigned int
 databits_decode_binary( char *dataout_p, unsigned int dataout_size,
-			unsigned long long bits, unsigned int n_databits );
+			unsigned long long bits, unsigned int n_databits,
+			int parity );
 
 
 unsigned int
 databits_decode_callerid( char *dataout_p, unsigned int dataout_size,
-			  unsigned long long bits, unsigned int n_databits );
+			  unsigned long long bits, unsigned int n_databits,
+			  int parity );
 
 unsigned int
 databits_decode_uic_ground( char *dataout_p, unsigned int dataout_size,
-			    unsigned long long bits, unsigned int n_databits );
+			    unsigned long long bits, unsigned int n_databits,
+			    int parity );
 
 unsigned int
 databits_decode_uic_train( char *dataout_p, unsigned int dataout_size,
-			   unsigned long long bits, unsigned int n_databits );
+			   unsigned long long bits, unsigned int n_databits,
+			   int parity );

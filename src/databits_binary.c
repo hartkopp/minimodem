@@ -28,7 +28,8 @@
 // returns nbytes decoded
 unsigned int
 databits_decode_binary( char *dataout_p, unsigned int dataout_size,
-			unsigned long long bits, unsigned int n_databits )
+			unsigned long long bits, unsigned int n_databits,
+			int parity )
 {
 	if ( ! dataout_p )	// databits processor reset: noop
 		return 0;
