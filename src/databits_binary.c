@@ -31,6 +31,9 @@ databits_decode_binary( char *dataout_p, unsigned int dataout_size,
 			unsigned long long bits, unsigned int n_databits,
 			int parity )
 {
+	if (parity)
+		n_databits++;
+
 	if ( ! dataout_p )	// databits processor reset: noop
 		return 0;
 	assert( dataout_size >= n_databits + 1 );
