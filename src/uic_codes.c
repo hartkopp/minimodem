@@ -46,7 +46,7 @@ uic_message uic_train_to_ground_messages[] = {
 };
 
 const char * uic_message_meaning(unsigned int code,
-	unsigned int type)
+				 unsigned int type)
 {
 	uic_message * messages;
 	if (type == UIC_TYPE_GROUNDTRAIN) {

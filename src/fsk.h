@@ -60,19 +60,19 @@ fsk_plan_destroy( fsk_plan *fskp );
 /* returns confidence value [0.0 to 1.0] */
 float
 fsk_find_frame( fsk_plan *fskp, float *samples, unsigned int frame_nsamples,
-	unsigned int try_first_sample,
-	unsigned int try_max_nsamples,
-	unsigned int try_step_nsamples,
-	float try_confidence_search_limit,
-	const char *expect_bits_string,
-	unsigned long long *bits_outp,
-	float *ampl_outp,
-	unsigned int *frame_start_outp
+		unsigned int try_first_sample,
+		unsigned int try_max_nsamples,
+		unsigned int try_step_nsamples,
+		float try_confidence_search_limit,
+		const char *expect_bits_string,
+		unsigned long long *bits_outp,
+		float *ampl_outp,
+		unsigned int *frame_start_outp
 	);
 
 int
 fsk_detect_carrier(fsk_plan *fskp, float *samples, unsigned int nsamples,
-	float min_mag_threshold );
+		   float min_mag_threshold );
 
 void
 fsk_set_tones_by_bandshift( fsk_plan *fskp, unsigned int b_mark, int b_shift );

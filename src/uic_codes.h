@@ -31,4 +31,4 @@ extern uic_message uic_ground_to_train_messages[];
 extern uic_message uic_train_to_ground_messages[];
 
 const char * uic_message_meaning(unsigned int code,
-	unsigned int type);
+				 unsigned int type);

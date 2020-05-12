@@ -27,19 +27,19 @@
 int
 databits_encode_ascii8( unsigned int *databits_outp, char char_out )
 {
-    *databits_outp = char_out;
-    return 1;
+	*databits_outp = char_out;
+	return 1;
 }
 
 /* returns nbytes decoded */
 unsigned int
 databits_decode_ascii8( char *dataout_p, unsigned int dataout_size,
-	unsigned long long bits, unsigned int n_databits )
+			unsigned long long bits, unsigned int n_databits )
 {
-    if ( ! dataout_p )	// databits processor reset: noop
-	return 0;
-    bits &= 0xFF;
-    *dataout_p = bits;
-    return 1;
+	if ( ! dataout_p )	// databits processor reset: noop
+		return 0;
+	bits &= 0xFF;
+	*dataout_p = bits;
+	return 1;
 }
 

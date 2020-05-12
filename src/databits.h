@@ -20,7 +20,7 @@
 // Reverses the ordering of the bits on an integer
 static inline unsigned long long
 bit_reverse(unsigned long long value,
-	unsigned int bits)
+	    unsigned int bits)
 {
 	unsigned int out = 0;
 
@@ -35,8 +35,8 @@ bit_reverse(unsigned long long value,
 // Gets "bits" bits from "value" starting "offset" bits from the start
 static inline unsigned long long
 bit_window(unsigned long long value,
-	unsigned int offset,
-	unsigned int bits)
+	   unsigned int offset,
+	   unsigned int bits)
 {
 	unsigned long long mask = (1ULL << bits) - 1;
 	value = (value >> offset) & mask;
@@ -56,7 +56,7 @@ databits_encode_ascii8( unsigned int *databits_outp, char char_out );
 
 unsigned int
 databits_decode_ascii8( char *dataout_p, unsigned int dataout_size,
-	unsigned long long bits, unsigned int n_databits );
+			unsigned long long bits, unsigned int n_databits );
 
 
 #include "baudot.h"
@@ -66,7 +66,7 @@ databits_decode_ascii8( char *dataout_p, unsigned int dataout_size,
 
 unsigned int
 databits_decode_baudot( char *dataout_p, unsigned int dataout_size,
-	unsigned long long bits, unsigned int n_databits );
+			unsigned long long bits, unsigned int n_databits );
 
 
 int
@@ -74,17 +74,17 @@ databits_encode_binary( unsigned int *databits_outp, char char_out );
 
 unsigned int
 databits_decode_binary( char *dataout_p, unsigned int dataout_size,
-	unsigned long long bits, unsigned int n_databits );
+			unsigned long long bits, unsigned int n_databits );
 
 
 unsigned int
 databits_decode_callerid( char *dataout_p, unsigned int dataout_size,
-	unsigned long long bits, unsigned int n_databits );
+			  unsigned long long bits, unsigned int n_databits );
 
 unsigned int
 databits_decode_uic_ground( char *dataout_p, unsigned int dataout_size,
-	unsigned long long bits, unsigned int n_databits );
+			    unsigned long long bits, unsigned int n_databits );
 
 unsigned int
 databits_decode_uic_train( char *dataout_p, unsigned int dataout_size,
-	unsigned long long bits, unsigned int n_databits );
+			   unsigned long long bits, unsigned int n_databits );

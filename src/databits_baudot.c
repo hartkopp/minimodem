@@ -28,13 +28,13 @@
 /* returns nbytes decoded */
 unsigned int
 databits_decode_baudot( char *dataout_p, unsigned int dataout_size,
-	unsigned long long bits, unsigned int n_databits )
+			unsigned long long bits, unsigned int n_databits )
 {
-    if ( ! dataout_p ) {	// databits processor reset: reset Baudot state
-	    baudot_reset();
-	    return 0;
-    }
-    bits &= 0x1F;
-    return baudot_decode(dataout_p, bits);
+	if ( ! dataout_p ) {	// databits processor reset: reset Baudot state
+		baudot_reset();
+		return 0;
+	}
+	bits &= 0x1F;
+	return baudot_decode(dataout_p, bits);
 }
 

@@ -27,8 +27,8 @@
 
 unsigned int
 databits_decode_uic(char *output,
-	unsigned long long input,
-	unsigned int type)
+		    unsigned long long input,
+		    unsigned int type)
 {
 	int written;
 
@@ -38,37 +38,37 @@ databits_decode_uic(char *output,
 
 	unsigned int code = (unsigned int) bit_reverse(bit_window(input, 24, 8), 8);
 	written = sprintf(output, "Train ID: %X%X%X%X%X%X - Message: %02X (%s)\n",
-			(unsigned int) bit_window(input, 0, 4),
-			(unsigned int) bit_window(input, 4, 4),
-			(unsigned int) bit_window(input, 8, 4),
-			(unsigned int) bit_window(input, 12, 4),
-			(unsigned int) bit_window(input, 16, 4),
-			(unsigned int) bit_window(input, 20, 4),
-			code,
-			uic_message_meaning(code, type)
-	);
+			  (unsigned int) bit_window(input, 0, 4),
+			  (unsigned int) bit_window(input, 4, 4),
+			  (unsigned int) bit_window(input, 8, 4),
+			  (unsigned int) bit_window(input, 12, 4),
+			  (unsigned int) bit_window(input, 16, 4),
+			  (unsigned int) bit_window(input, 20, 4),
+			  code,
+			  uic_message_meaning(code, type)
+		);
 
 	return written;
 }
 
 unsigned int
 databits_decode_uic_ground(char *output,
-	unsigned int outputSize,
-	unsigned long long input,
-	unsigned int inputSize)
+			   unsigned int outputSize,
+			   unsigned long long input,
+			   unsigned int inputSize)
 {
 	return databits_decode_uic(output,
-		input,
-		UIC_TYPE_GROUNDTRAIN);
+				   input,
+				   UIC_TYPE_GROUNDTRAIN);
 }
 
 unsigned int
 databits_decode_uic_train(char *output,
-	unsigned int outputSize,
-	unsigned long long input,
-	unsigned int inputSize)
+			  unsigned int outputSize,
+			  unsigned long long input,
+			  unsigned int inputSize)
 {
 	return databits_decode_uic(output,
-		input,
-		UIC_TYPE_TRAINGROUND);
+				   input,
+				   UIC_TYPE_TRAINGROUND);
 }

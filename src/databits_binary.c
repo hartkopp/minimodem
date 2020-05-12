@@ -28,15 +28,15 @@
 // returns nbytes decoded
 unsigned int
 databits_decode_binary( char *dataout_p, unsigned int dataout_size,
-	unsigned long long bits, unsigned int n_databits )
+			unsigned long long bits, unsigned int n_databits )
 {
-    if ( ! dataout_p )	// databits processor reset: noop
-	return 0;
-    assert( dataout_size >= n_databits + 1 );
-    int j;
-    for ( j=0; j<n_databits; j++ )
-	dataout_p[j] = (bits>>j & 1) + '0';
-    dataout_p[j] = '\n';
-    return n_databits + 1;
+	if ( ! dataout_p )	// databits processor reset: noop
+		return 0;
+	assert( dataout_size >= n_databits + 1 );
+	int j;
+	for ( j=0; j<n_databits; j++ )
+		dataout_p[j] = (bits>>j & 1) + '0';
+	dataout_p[j] = '\n';
+	return n_databits + 1;
 }
 
